@@ -4,6 +4,7 @@ import (
 	"douyin-grab/pkg/logger"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -73,6 +74,7 @@ func GetWssUrl(liveRoomUrl string) (string, error) {
 
 	//get request log
 	logs, err := webDriver.Log(slog.Performance)
+	//fmt.Println(logs)
 	if nil == err {
 		if nil == err {
 			for _, message := range logs {
@@ -89,15 +91,15 @@ func GetWssUrl(liveRoomUrl string) (string, error) {
 					return "", err
 				}
 
-				// file, err := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-				// if err != nil {
-				// 	log.Fatal(err)
-				// }
-				// defer file.Close()
-				// _, err = file.WriteString(message.Message)
-				// if err != nil {
-				// 	log.Fatal(err)
-				// }
+				file, err := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+				if err != nil {
+					log.Fatal(err)
+				}
+				defer file.Close()
+				_, err = file.WriteString("\n" + message.Message)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}

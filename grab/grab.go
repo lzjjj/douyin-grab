@@ -2,11 +2,7 @@ package grab
 
 import (
 	"douyin-grab/pkg/logger"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"net/url"
-	"regexp"
 )
 
 type RoomInfo struct {
@@ -43,30 +39,30 @@ func FetchLiveRoomInfo(roomUrl string) (*RoomInfo, string) {
 		return nil, ""
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	//body, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
-	if err != nil {
-		logger.Error("read res body err", err)
-		return nil, ""
-	}
+	//if err != nil {
+	//	logger.Error("read res body err", err)
+	//	return nil, ""
+	//}
 
-	pattern := regexp.MustCompile(`<script id="RENDER_DATA" type="application/json">(.*?)</script>`)
-	data := pattern.FindSubmatch(body)
-	decodedUrl, err := url.QueryUnescape(string(data[1]))
-	if err != nil {
-		logger.Error("url decode err", err)
-		return nil, ""
-	}
-
-	var roomInfo RoomInfo
-	err = json.Unmarshal([]byte(decodedUrl), &roomInfo)
-	if err != nil {
-		logger.Error("json unmarshal err", err)
-		return nil, ""
-	}
-	logger.Info("roomid: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.RoomId)
-	logger.Info("title: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.Room.Title)
-	logger.Info("user_count: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.Room.UserCountStr)
+	//pattern := regexp.MustCompile(`<script id="RENDER_DATA" type="application/json">(.*?)</script>`)
+	//data := pattern.FindSubmatch(body)
+	//decodedUrl, err := url.QueryUnescape(string(data[1]))
+	//if err != nil {
+	//	logger.Error("url decode err", err)
+	//	return nil, ""
+	//}
+	//
+	//var roomInfo RoomInfo
+	//err = json.Unmarshal([]byte(decodedUrl), &roomInfo)
+	//if err != nil {
+	//	logger.Error("json unmarshal err", err)
+	//	return nil, ""
+	//}
+	//logger.Info("roomid: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.RoomId)
+	//logger.Info("title: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.Room.Title)
+	//logger.Info("user_count: %s", roomInfo.App.InitialState.RoomStore.RoomInfo.Room.UserCountStr)
 
 	var ttwid string
 	for _, cookie := range resp.Cookies() {
@@ -76,5 +72,5 @@ func FetchLiveRoomInfo(roomUrl string) (*RoomInfo, string) {
 	}
 	logger.Info("ttwid: %s", ttwid)
 
-	return &roomInfo, ttwid
+	return nil, ttwid
 }
