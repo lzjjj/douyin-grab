@@ -30,7 +30,9 @@ func GetWssUrl(liveRoomUrl string) (string, error) {
 		port, _          = strconv.Atoi(os.Getenv("CHROME_DRIVER_SERVICE_PORT"))
 	)
 
-	options := []selenium.ServiceOption{}
+	options := []selenium.ServiceOption{
+		selenium.Output(os.Stderr),
+	}
 	//selenium.SetDebug(true)
 	service, err := selenium.NewChromeDriverService(chromeDriverPath, port, options...)
 	if err != nil {
@@ -41,8 +43,14 @@ func GetWssUrl(liveRoomUrl string) (string, error) {
 
 	caps := selenium.Capabilities{
 		"browserName": "chrome",
+		"platform":    "ANY",
+		"version":     "",
 		"goog:loggingPrefs": map[string]string{ //can get log with this, important!!
 			"performance": "ALL",
+		},
+		"goog:chromeOptions": map[string][]string{
+			"extensions": []string{},
+			"args":       []string{"--headless"},
 		},
 	}
 	chromeCaps := chrome.Capabilities{
@@ -70,7 +78,7 @@ func GetWssUrl(liveRoomUrl string) (string, error) {
 	_ = webDriver.Get(liveRoomUrl)
 
 	//wait web page loading
-	time.Sleep(2 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	//get request log
 	logs, err := webDriver.Log(slog.Performance)
